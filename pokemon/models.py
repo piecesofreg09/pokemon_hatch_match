@@ -13,18 +13,23 @@ class Pokemon(models.Model):
     name = models.CharField(max_length=20, help_text='Name of the pokemon')
 
     weight = models.IntegerField()
+    height = models.IntegerField()
 
     stat = models.OneToOneField(Stat)
+    sprites = models.OneToOneField(Sprite)
     generation = models.ForeignKey(Generation)
     types = models.ManyToManyField(Type)
     
+    class Meta:
+        ordering = ['idd']
+
     def __str__(self):
         """String for representing the Model object."""
         return self.name
     
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
-        return reverse('author-detail', args=[str(self.id)])
+        return reverse('author-detail', args=[str(self.idd)])
 
 
 class Generation(models.Model):
@@ -42,6 +47,8 @@ class Generation(models.Model):
         
 class Type(models.Model):
     """Model representing the type, such as grass, poison, ..."""
+    type_number = models.IntegerField(primary_key=True, 
+        help_text='type number')
     name = models.CharField(max_length=30,
                             help_text="the type of the selected pokemon")
 
@@ -51,7 +58,7 @@ class Type(models.Model):
     
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
-        return reverse('type-detail', args=[str(self.id)])
+        return reverse('type-detail', args=[str(self.type_number)])
     
 class Stat(models.Model):
     """Stat object, including six stats:
@@ -71,10 +78,15 @@ class Stat(models.Model):
         """String for representing the Model object (in Admin site etc.)"""
         return f'{self.hp}, {self.attack}, {self.defense}'
 
-class Sprites(models.Model):
-    """Sprites links for a specific pokemon"""
+class Sprite(models.Model):
+    """
+    Sprites links for a specific pokemon.
+    First three links are from pokemon api, big_sprite is from bulbapedia.
+    """
     back_default = models.URLField(max=300, verbose_name='default back url')
     front_default = models.URLField(max=300, verbose_name='default back url')
+    svg_sprite = models.URLField(max=300, verbose_name='default back url')
+
     big_sprite = models.URLField(max=300, verbose_name='default back url')
 
     def __str__(self):
