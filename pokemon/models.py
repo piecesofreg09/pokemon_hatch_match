@@ -1,36 +1,9 @@
 from django.db import models
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from datetime import date
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
-
-# Create your models here.
-class Pokemon(models.Model):
-    """Model representing a pokemon."""
-    idd = models.IntegerField(primary_key=True, help_text='Pokemon id in the official game')
-    name = models.CharField(max_length=20, help_text='Name of the pokemon')
-
-    weight = models.IntegerField()
-    height = models.IntegerField()
-
-    stat = models.OneToOneField(Stat)
-    sprites = models.OneToOneField(Sprite)
-    generation = models.ForeignKey(Generation)
-    types = models.ManyToManyField(Type)
-    
-    class Meta:
-        ordering = ['idd']
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.name
-    
-    def get_absolute_url(self):
-        """Returns the url to access a particular author instance."""
-        return reverse('author-detail', args=[str(self.idd)])
-
 
 class Generation(models.Model):
     """Model representing the generation number, such as 1, 2, 3, ..."""
@@ -39,7 +12,7 @@ class Generation(models.Model):
 
     def __str__(self):
         """String for representing the Model object (in Admin site etc.)"""
-        return self.generation_number
+        return str(self.generation_number)
     
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
@@ -70,24 +43,50 @@ class Stat(models.Model):
     special_attack = models.IntegerField(help_text='Special attack point')
     special_attack_acc_rounds = models.IntegerField(help_text='Rounds to trigger special attack')
     special_defense = models.IntegerField(help_text='Special defense point')
-    special_defense_probability = models.FloatField(
-        help_text='Probability to trigger special defense')
     speed = models.IntegerField(help_text='Speed')
 
     def __str__(self):
         """String for representing the Model object (in Admin site etc.)"""
         return f'{self.hp}, {self.attack}, {self.defense}'
+    
+    def special_defense_probability(self):
+        return self.special_defense / 200
 
 class Sprite(models.Model):
     """
     Sprites links for a specific pokemon.
     First three links are from pokemon api, big_sprite is from bulbapedia.
     """
-    back_default = models.URLField(max=300, verbose_name='default back url')
-    front_default = models.URLField(max=300, verbose_name='default back url')
-    svg_sprite = models.URLField(max=300, verbose_name='default back url')
+    back_default = models.URLField(max_length=300, verbose_name='default back url')
+    front_default = models.URLField(max_length=300, verbose_name='default back url')
+    svg_sprite = models.URLField(max_length=300, verbose_name='default back url')
 
-    big_sprite = models.URLField(max=300, verbose_name='default back url')
-
+    big_sprite = models.URLField(max_length=300, verbose_name='default back url')
+    
     def __str__(self):
         return 'Sprites object'
+
+# Create your models here.
+class Pokemon(models.Model):
+    """Model representing a pokemon."""
+    idd = models.IntegerField(primary_key=True, help_text='Pokemon id in the official game')
+    name = models.CharField(max_length=30, help_text='Name of the pokemon')
+
+    weight = models.IntegerField()
+    height = models.IntegerField()
+
+    stat = models.OneToOneField(Stat, on_delete=models.CASCADE)
+    sprites = models.OneToOneField(Sprite, on_delete=models.CASCADE)
+    generation = models.ForeignKey(Generation, on_delete=models.CASCADE)
+    types = models.ManyToManyField(Type)
+    
+    class Meta:
+        ordering = ['idd']
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+    
+    def get_absolute_url(self):
+        """Returns the url to access a particular author instance."""
+        return reverse('pokemon-detail', args=[str(self.idd)])
