@@ -1,8 +1,11 @@
-# pokemon_hatch_match
+# Pokemon Hatch Match
 
-Djiango project of hatching pokemon
+Djiango project of hatching pokemon and team fights.
+
+This project is purely for fun, and does not correspond to real in-game situation. Though stats of pokemons are derived from official documents.
 
 Navigation bar:
+
 Pokmeons, Match and Hatch, Fight
 
 My pokemons
