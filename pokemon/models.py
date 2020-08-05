@@ -74,6 +74,7 @@ class Pokemon(models.Model):
 
     weight = models.IntegerField()
     height = models.IntegerField()
+    base_exp = models.IntegerField()
 
     stat = models.OneToOneField(Stat, on_delete=models.CASCADE)
     sprites = models.OneToOneField(Sprite, on_delete=models.CASCADE)
