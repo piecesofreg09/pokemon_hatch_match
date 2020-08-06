@@ -17,24 +17,25 @@ class Generation(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
         return reverse('generation-detail', args=[str(self.generation_number)])
-        
+
+
 class Type(models.Model):
     """Model representing the type, such as grass, poison, ..."""
     type_number = models.IntegerField(primary_key=True, 
         help_text='type number')
     name = models.CharField(max_length=30,
                             help_text="the type of the selected pokemon")
-    double_damage_from = models.ManyToManyField('self', 
+    double_damage_from = models.ManyToManyField('self', symmetrical=False,
         related_name='double_damage_from_set', blank=True, null=True)
-    double_damage_to = models.ManyToManyField('self', 
+    double_damage_to = models.ManyToManyField('self', symmetrical=False,
         related_name='double_damage_to_set', blank=True, null=True)
-    half_damage_from = models.ManyToManyField('self', 
+    half_damage_from = models.ManyToManyField('self', symmetrical=False,
         related_name='half_damage_from_set', blank=True, null=True)
-    half_damage_to = models.ManyToManyField('self', 
+    half_damage_to = models.ManyToManyField('self', symmetrical=False,
         related_name='half_damage_to_set', blank=True, null=True)
-    no_damage_from = models.ManyToManyField('self', 
+    no_damage_from = models.ManyToManyField('self', symmetrical=False,
         related_name='no_damage_from_set', blank=True, null=True)
-    no_damage_to = models.ManyToManyField('self', 
+    no_damage_to = models.ManyToManyField('self', symmetrical=False,
         related_name='no_damage_to_set', blank=True, null=True)
 
     def __str__(self):
@@ -44,7 +45,13 @@ class Type(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
         return reverse('type-detail', args=[str(self.type_number)])
-    
+
+class Relationship(models.Model):
+    from_pokemon = models.ForeignKey(Type, related_name='from_pokemon', 
+        on_delete=models.CASCADE)
+    to_pokemon = models.ForeignKey(Type, related_name='to_pokemon', 
+        on_delete=models.CASCADE)
+
 class Stat(models.Model):
     """Stat object, including six stats:
     hp, attack, defense, special-attack, special-defense, speed"""

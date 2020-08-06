@@ -4,13 +4,15 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 # settings for the relative path import
 sys.path.append(os.path.abspath('..'))
-# settings for django, to avoid warnings for uninstalled apps
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pokemh.settings')
-
+'''
 from scrape import tests
 print(tests.y)
 import test_im
 print(test_im.x)
+'''
+
+# settings for django, to avoid warnings for uninstalled apps
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pokemh.settings')
 
 # settings for avoiding the following error
 # django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
@@ -96,10 +98,13 @@ def scrape():
                 type_obj = Type()
 
 def type_scrape():
+    print('in type scraping')
     base_url = 'https://pokeapi.co/api/v2/'
     result_types = requests.get(f'{base_url}type').text
     json_types = json.loads(result_types)
-    for type_pair in json_types['results']:
+    print('in base type scraping')
+    for count, type_pair in enumerate(json_types['results']):
+        print(count)
         type_url = type_pair['url']
         result_type = requests.get(type_url).text
         json_type = json.loads(result_type)
@@ -107,44 +112,49 @@ def type_scrape():
         name = json_type['name']
         t1 = Type(type_number=idd, name=name)
         t1.save()
-
-    for type_pair in json_types['results']:
+    print('done base type scraping')
+    print('in related type scraping')
+    for count, type_pair in enumerate(json_types['results']):
+        #print(count)
         type_url = type_pair['url']
         result_type = requests.get(type_url).text
         json_type = json.loads(result_type)
         idd = int(json_type['id'])
         main_type = Type.objects.get(pk=idd)
+        #print(main_type)
 
         damage_rel = json_type['damage_relations']
+        #print(damage_rel)
         # double damage from
-        for type_pair in damage_rel[0]:
+        for type_pair in damage_rel['double_damage_from']:
             link_type = Type.objects.get(name=type_pair['name'])
             main_type.double_damage_from.add(link_type)
         
         # double damage to
-        for type_pair in damage_rel[1]:
+        for type_pair in damage_rel['double_damage_to']:
             link_type = Type.objects.get(name=type_pair['name'])
-            main_type.double_damage_from.add(link_type)
+            main_type.double_damage_to.add(link_type)
         
         # half damage from
-        for type_pair in damage_rel[2]:
+        for type_pair in damage_rel['half_damage_from']:
             link_type = Type.objects.get(name=type_pair['name'])
-            main_type.double_damage_from.add(link_type)
+            main_type.half_damage_from.add(link_type)
         
         # half damage to
-        for type_pair in damage_rel[3]:
+        for type_pair in damage_rel['half_damage_to']:
             link_type = Type.objects.get(name=type_pair['name'])
-            main_type.double_damage_from.add(link_type)
+            main_type.half_damage_to.add(link_type)
         
         # no damage from
-        for type_pair in damage_rel[4]:
+        for type_pair in damage_rel['no_damage_from']:
             link_type = Type.objects.get(name=type_pair['name'])
-            main_type.double_damage_from.add(link_type)
+            main_type.no_damage_from.add(link_type)
         
         # no damage to
-        for type_pair in damage_rel[5]:
+        for type_pair in damage_rel['no_damage_to']:
             link_type = Type.objects.get(name=type_pair['name'])
-            main_type.double_damage_from.add(link_type)
+            main_type.no_damage_to.add(link_type)
+    print('Done scraping relationships')
 
 
 if __name__ == '__main__':
@@ -158,6 +168,7 @@ if __name__ == '__main__':
     elif sys.argv[1] == "scrape" or sys.argv[1] == "s":
         scrape()
     elif sys.argv[1] == "type" or sys.argv[1] == "type":
+        Type.objects.all().delete()
         type_scrape()
     else:
         scrape()
