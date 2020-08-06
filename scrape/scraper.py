@@ -1,5 +1,7 @@
 import requests, json
 import sys, os
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
 # settings for the relative path import
 sys.path.append(os.path.abspath('..'))
 # settings for django, to avoid warnings for uninstalled apps
@@ -19,25 +21,143 @@ from pokemon.models import Generation, Type, Stat, Sprite, Pokemon
 
 def scrape():
     base_url = 'https://pokeapi.co/api/v2/'
-    generation_num = 7
+    generation_num = 1
     for generation in range(1, generation_num + 1):
-        pokemon_num = 2
-        g1 = Generation(generation_number=1)
-        g1.save()
-        for pokemon_id in range(1, max_num):
+        gen_obj = Generation(generation_number=generation)
+        gen_obj.save()
+
+        result_gen = requests.get(f'{base_url}generation/{generation}').text
+        result_gen_json = json.loads(result_gen)
+        pokemons = result_gen_json['pokemon_species']
+        
+        for pokemon in pokemons[:2]:
+            # species information
+            url = pokemon['url'][:-1]
+            pokemon_name = pokemon['name']
+            result_species = requests.get(f'{base_url}pokemon-species/{pokemon_id}').text
+            result_species_json = json.loads(result_species)
+
+            # pokemon information
+            pokemon_id = url[len(url) - url[::-1].index('/'):]
             result = requests.get(f'{base_url}pokemon/{pokemon_id}').text
             result_json = json.loads(result)
-            print(result_json.keys())
+
             p_name = result_json['name']
-            p_weight = result_json['weight']
+            p_weight = int(result_json['weight'])
+            p_height = int(result_json['height'])
+            p_base_exp = int(result_json['base_experience'])
+            p_capture_rate = int(result_species_json['capture_rate'])
+            p_cost = 1000 // p_capture_rate
+
+            # sprites information
+            back_default = result_json['sprites']['back_default']
+            front_default = result_json['sprites']['front_default']
+            svg_sprite = result_json['sprites']['other']['dream_world']['front_default']
             
+            # big sprite extraction
+            sprite_page_external_url = f'https://bulbapedia.bulbagarden.net/wiki/{p_name}'
+            sprite_bs = BeautifulSoup(requests.get(sprite_page_external_url).text, 'html.parser')
+            p_name_cap = p_name.capitalize()
+            sprite_url = sprite_bs.select("img[alt=\"{p_name_cap}\"]")[0]['src']
+            sprite_url = 'http:' + sprite_url
+
+            # sprites object
+            sprite_obj = Sprite(back_default=back_default, front_default=front_default,
+                svg_sprite=svg_sprite, big_sprite=sprite_url)
+            sprite_obj.save()
+
+            # stat information
+            stats = result_json['stats']
+            key_name = 'base_stat'
+            hp = stats[0][key_name]
+            attack = stats[1][key_name]
+            defense = stats[2][key_name]
+            special_attack = stats[3][key_name]
+            special_attack_acc_rounds = ((special_attack - attack) / attack) // 0.5 + 1
+            special_defense = stats[4][key_name]
+            speed = stats[5][key_name]
+
+            # stat object
+            stat_obj = Stat(hp=hp, attack=attack, defense=defense,
+                special_attack=special_attack, 
+                special_attack_acc_rounds=special_attack_acc_rounds,
+                special_defense=special_defense, speed=speed)
+            stat_obj.save()
+
+            p_obj = Pokemon(idd=pokemon_id, name=p_name,
+                weight=p_weight, height=p_height, base_exp=p_base_exp,
+                cost=p_cost, user_defined=True, generation=gen_obj,
+                sprites=sprite_obj, stat=stat_obj)
+            p_obj.save()
+
+            for type_n in result_json['types']:
+                name = type_n['name']
+                
+                type_obj = Type()
+
+def type_scrape():
+    base_url = 'https://pokeapi.co/api/v2/'
+    result_types = requests.get(f'{base_url}type').text
+    json_types = json.loads(result_types)
+    for type_pair in json_types['results']:
+        type_url = type_pair['url']
+        result_type = requests.get(type_url).text
+        json_type = json.loads(result_type)
+        idd = int(json_type['id'])
+        name = json_type['name']
+        t1 = Type(type_number=idd, name=name)
+        t1.save()
+
+    for type_pair in json_types['results']:
+        type_url = type_pair['url']
+        result_type = requests.get(type_url).text
+        json_type = json.loads(result_type)
+        idd = int(json_type['id'])
+        main_type = Type.objects.get(pk=idd)
+
+        damage_rel = json_type['damage_relations']
+        # double damage from
+        for type_pair in damage_rel[0]:
+            link_type = Type.objects.get(name=type_pair['name'])
+            main_type.double_damage_from.add(link_type)
+        
+        # double damage to
+        for type_pair in damage_rel[1]:
+            link_type = Type.objects.get(name=type_pair['name'])
+            main_type.double_damage_from.add(link_type)
+        
+        # half damage from
+        for type_pair in damage_rel[2]:
+            link_type = Type.objects.get(name=type_pair['name'])
+            main_type.double_damage_from.add(link_type)
+        
+        # half damage to
+        for type_pair in damage_rel[3]:
+            link_type = Type.objects.get(name=type_pair['name'])
+            main_type.double_damage_from.add(link_type)
+        
+        # no damage from
+        for type_pair in damage_rel[4]:
+            link_type = Type.objects.get(name=type_pair['name'])
+            main_type.double_damage_from.add(link_type)
+        
+        # no damage to
+        for type_pair in damage_rel[5]:
+            link_type = Type.objects.get(name=type_pair['name'])
+            main_type.double_damage_from.add(link_type)
 
 
 if __name__ == '__main__':
     print(__package__)
-    Generation.objects.all().delete()
-    Type.objects.all().delete()
-    Stat.objects.all().delete()
-    Sprite.objects.all().delete()
-    Pokemon.objects.all().delete()
-    scrape()
+    if sys.argv[1] == "delete" or  sys.argv[1] == "d":
+        Generation.objects.all().delete()
+        Type.objects.all().delete()
+        Stat.objects.all().delete()
+        Sprite.objects.all().delete()
+        Pokemon.objects.all().delete()
+    elif sys.argv[1] == "scrape" or sys.argv[1] == "s":
+        scrape()
+    elif sys.argv[1] == "type" or sys.argv[1] == "type":
+        type_scrape()
+    else:
+        scrape()

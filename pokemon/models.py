@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
-#from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from datetime import date
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -24,6 +24,18 @@ class Type(models.Model):
         help_text='type number')
     name = models.CharField(max_length=30,
                             help_text="the type of the selected pokemon")
+    double_damage_from = models.ManyToManyField('self', 
+        related_name='double_damage_from_set', blank=True, null=True)
+    double_damage_to = models.ManyToManyField('self', 
+        related_name='double_damage_to_set', blank=True, null=True)
+    half_damage_from = models.ManyToManyField('self', 
+        related_name='half_damage_from_set', blank=True, null=True)
+    half_damage_to = models.ManyToManyField('self', 
+        related_name='half_damage_to_set', blank=True, null=True)
+    no_damage_from = models.ManyToManyField('self', 
+        related_name='no_damage_from_set', blank=True, null=True)
+    no_damage_to = models.ManyToManyField('self', 
+        related_name='no_damage_to_set', blank=True, null=True)
 
     def __str__(self):
         """String for representing the Model object (in Admin site etc.)"""
@@ -75,12 +87,16 @@ class Pokemon(models.Model):
     weight = models.IntegerField()
     height = models.IntegerField()
     base_exp = models.IntegerField()
+    cost = models.IntegerField(default=45)
 
     stat = models.OneToOneField(Stat, on_delete=models.CASCADE)
     sprites = models.OneToOneField(Sprite, on_delete=models.CASCADE)
     generation = models.ForeignKey(Generation, on_delete=models.CASCADE)
     types = models.ManyToManyField(Type)
+
+    user_defined = models.BooleanField()
     
+
     class Meta:
         ordering = ['idd']
 
