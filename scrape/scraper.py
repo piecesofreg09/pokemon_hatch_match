@@ -22,8 +22,9 @@ django.setup()
 from pokemon.models import Generation, Type, Stat, Sprite, Pokemon
 
 def scrape():
+    problem_pokemons = []
     base_url = 'https://pokeapi.co/api/v2/'
-    generation_num = 1
+    generation_num = 5
     for generation in range(1, generation_num + 1):
         gen_obj = Generation(generation_number=generation)
         gen_obj.save()
@@ -32,15 +33,17 @@ def scrape():
         result_gen_json = json.loads(result_gen)
         pokemons = result_gen_json['pokemon_species']
         
-        for pokemon in pokemons[:2]:
+        for countt, pokemon in enumerate(pokemons):
+            print(countt)
             # species information
             url = pokemon['url'][:-1]
             pokemon_name = pokemon['name']
+            pokemon_id = url[len(url) - url[::-1].index('/'):]
+            print('pokemon id: ' + str(pokemon_id) + ', pokemon name: ' + pokemon_name)
             result_species = requests.get(f'{base_url}pokemon-species/{pokemon_id}').text
             result_species_json = json.loads(result_species)
 
             # pokemon information
-            pokemon_id = url[len(url) - url[::-1].index('/'):]
             result = requests.get(f'{base_url}pokemon/{pokemon_id}').text
             result_json = json.loads(result)
 
@@ -60,11 +63,17 @@ def scrape():
             sprite_page_external_url = f'https://bulbapedia.bulbagarden.net/wiki/{p_name}'
             sprite_bs = BeautifulSoup(requests.get(sprite_page_external_url).text, 'html.parser')
             p_name_cap = p_name.capitalize()
-            sprite_url = sprite_bs.select("img[alt=\"{p_name_cap}\"]")[0]['src']
-            sprite_url = 'http:' + sprite_url
+            sprite_temp_bs_res = sprite_bs.select(f"img[alt=\"{p_name_cap}\"]")
+            if len(sprite_temp_bs_res) > 0:
+                sprite_url = sprite_temp_bs_res[0]['src']
+                sprite_url = 'http:' + sprite_url
+            else:
+                problem_pokemons.append(p_name)
+                sprite_url = 'http://google.com'
 
             # sprites object
-            sprite_obj = Sprite(back_default=back_default, front_default=front_default,
+            sprite_obj = Sprite(name=p_name, back_default=back_default, 
+                front_default=front_default,
                 svg_sprite=svg_sprite, big_sprite=sprite_url)
             sprite_obj.save()
 
@@ -80,7 +89,7 @@ def scrape():
             speed = stats[5][key_name]
 
             # stat object
-            stat_obj = Stat(hp=hp, attack=attack, defense=defense,
+            stat_obj = Stat(name=p_name, hp=hp, attack=attack, defense=defense,
                 special_attack=special_attack, 
                 special_attack_acc_rounds=special_attack_acc_rounds,
                 special_defense=special_defense, speed=speed)
@@ -88,14 +97,17 @@ def scrape():
 
             p_obj = Pokemon(idd=pokemon_id, name=p_name,
                 weight=p_weight, height=p_height, base_exp=p_base_exp,
-                cost=p_cost, user_defined=True, generation=gen_obj,
+                cost=p_cost, user_defined=False, generation=gen_obj,
                 sprites=sprite_obj, stat=stat_obj)
             p_obj.save()
 
             for type_n in result_json['types']:
-                name = type_n['name']
+                name = type_n['type']['name']
                 
-                type_obj = Type()
+                type_obj = Type.objects.get(name=name)
+                p_obj.types.add(type_obj)
+    with open('data.json', 'w') as f:
+        json.dump(problem_pokemons, f)
 
 def type_scrape():
     print('in type scraping')
@@ -166,6 +178,12 @@ if __name__ == '__main__':
         Sprite.objects.all().delete()
         Pokemon.objects.all().delete()
     elif sys.argv[1] == "scrape" or sys.argv[1] == "s":
+        if len(sys.argv) > 2 and sys.argv[2] == "d":
+            Generation.objects.all().delete()
+            Stat.objects.all().delete()
+            Sprite.objects.all().delete()
+            Pokemon.objects.all().delete()
+
         scrape()
     elif sys.argv[1] == "type" or sys.argv[1] == "type":
         Type.objects.all().delete()

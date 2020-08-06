@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>{{ pokemon.name.capitalize }}</h1>
+
+  <p><strong>Weight:</strong> {{pokemon.weight}} </p>
+  <p><strong>Height:</strong> {{pokemon.height}} </p>
+  <img src="{{pokemon.sprites.svg_sprite}}"></img>
+  {{pokemon.sprites.svg_sprite}}
+  
+{% endblock %}

@@ -1,9 +1,13 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-  <title>Pokemon Homepage</title>
+  <title>Homepage</title>
 {% endblock %}
 
 {% block content %}
-  {{x}}
+  <ul>
+    <li>number of generations: {{gen_count}}</li>
+    <li>number of types: {{type_count}}</li>
+    <li>number of pokemons: {{pokemon_count}}</li>
+  </ul>
 {% endblock %}

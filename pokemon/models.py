@@ -26,17 +26,17 @@ class Type(models.Model):
     name = models.CharField(max_length=30,
                             help_text="the type of the selected pokemon")
     double_damage_from = models.ManyToManyField('self', symmetrical=False,
-        related_name='double_damage_from_set', blank=True, null=True)
+        related_name='double_damage_from_set', blank=True)
     double_damage_to = models.ManyToManyField('self', symmetrical=False,
-        related_name='double_damage_to_set', blank=True, null=True)
+        related_name='double_damage_to_set', blank=True)
     half_damage_from = models.ManyToManyField('self', symmetrical=False,
-        related_name='half_damage_from_set', blank=True, null=True)
+        related_name='half_damage_from_set', blank=True)
     half_damage_to = models.ManyToManyField('self', symmetrical=False,
-        related_name='half_damage_to_set', blank=True, null=True)
+        related_name='half_damage_to_set', blank=True)
     no_damage_from = models.ManyToManyField('self', symmetrical=False,
-        related_name='no_damage_from_set', blank=True, null=True)
+        related_name='no_damage_from_set', blank=True)
     no_damage_to = models.ManyToManyField('self', symmetrical=False,
-        related_name='no_damage_to_set', blank=True, null=True)
+        related_name='no_damage_to_set', blank=True)
 
     def __str__(self):
         """String for representing the Model object (in Admin site etc.)"""
@@ -55,6 +55,9 @@ class Relationship(models.Model):
 class Stat(models.Model):
     """Stat object, including six stats:
     hp, attack, defense, special-attack, special-defense, speed"""
+
+    name = models.CharField(max_length=30, 
+        help_text='name of the pokemon this set of stats belongs to')
 
     hp = models.IntegerField(help_text='Hit point (health point)')
     attack = models.IntegerField(help_text='Attack point')
@@ -76,6 +79,8 @@ class Sprite(models.Model):
     Sprites links for a specific pokemon.
     First three links are from pokemon api, big_sprite is from bulbapedia.
     """
+    name = models.CharField(max_length=30,
+        help_text='name of the pokemon this set of sprites belongs to')
     back_default = models.URLField(max_length=300, verbose_name='default back url')
     front_default = models.URLField(max_length=300, verbose_name='default back url')
     svg_sprite = models.URLField(max_length=300, verbose_name='default back url')
