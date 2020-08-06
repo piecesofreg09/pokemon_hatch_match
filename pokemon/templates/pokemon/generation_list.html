@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+  <h1>All Generations</h1>
+  {% if all_generation_list %}
+  <ul>
+    {% for generation in all_generation_list %}
+      <li>
+        <a href="">Generation {{ generation.generation_number }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no generations recorded on this website.</p>
+  {% endif %}       
+{% endblock %}

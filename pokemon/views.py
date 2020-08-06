@@ -48,12 +48,12 @@ class PokemonDetailView(generic.DetailView):
 class GenerationListView(generic.ListView):
     model = Generation
     # your own name for the list as a template variable
-    context_object_name = 'all_pokemon_list'
+    context_object_name = 'all_generation_list'
     # Get 5 books containing the title war
     #queryset = Book.objects.filter(title__icontains='war')[:5] 
     # Specify your own template name/location
     #template_name = 'books/my_arbitrary_template_name_list.html' 
-    paginate_by = 25
+    paginate_by = 10
 
 class GenerationDetailView(generic.DetailView):
     model = Generation
