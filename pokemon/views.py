@@ -57,3 +57,11 @@ class GenerationListView(generic.ListView):
 
 class GenerationDetailView(generic.DetailView):
     model = Generation
+
+def GenerationDetail(request, rest):
+    context = {"temp": 11111, 'pk': rest}
+    return render(request, 'generation_detail.html', context=context)
+
+def Test(request, pp, xxx):
+    context = {"var1": pp, "var2": xxx}
+    return render(request, 'generation_detail.html', context=context)

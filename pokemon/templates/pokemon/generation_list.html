@@ -7,7 +7,7 @@
   <ul>
     {% for generation in all_generation_list %}
       <li>
-        <a href="">Generation {{ generation.generation_number }}</a>
+        <a href="{{ generation.get_absolute_url }}">Generation {{ generation.generation_number }}</a>
       </li>
     {% endfor %}
   </ul>
