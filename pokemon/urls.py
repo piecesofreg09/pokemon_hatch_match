@@ -11,5 +11,6 @@ urlpatterns += [
     path('pokemons/<int:pk>', views.PokemonDetailView.as_view(), name='pokemon-detail'),
     path('generations/', views.GenerationListView.as_view(), name='generations'),
     path('generations/<int:pk>', views.GenerationDetailView.as_view(), name='generation-detail'),
-    path('generation/<int:pp>/<int:xx>', views.Test, name='test')
+    # a path for testing purposes
+    path('generation/<int:pp>/<int:xx>', views.Test, name='test'),
 ]
