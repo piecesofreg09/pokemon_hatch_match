@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+  <h1>All Generations</h1>
+  {% if all_type_list %}
+  <ul>
+    {% for type in all_type_list %}
+      <li>
+        <p><a href="{{ type.get_absolute_url }}"> <img src="{{ type.sprite_url }}" width='30px'></img> {{ type.name }}</a> ({{type.pokemon_set.all.count}} pokemons)</p>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no types recorded on this website.</p>
+  {% endif %}       
+{% endblock %}

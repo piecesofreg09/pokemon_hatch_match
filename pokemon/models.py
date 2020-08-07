@@ -38,6 +38,8 @@ class Type(models.Model):
     no_damage_to = models.ManyToManyField('self', symmetrical=False,
         related_name='no_damage_to_set', blank=True)
 
+    sprite_url = models.URLField(help_text='the url of the sprite of the required type')
+
     def __str__(self):
         """String for representing the Model object (in Admin site etc.)"""
         return self.name

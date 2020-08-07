@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h2>In Generation {{ generation.generation_number }}: {{generation.pokemon_set.all.count}} Pokemons</h2>
+  <h2>In Type {{ type.name }}: {{type.pokemon_set.all.count}} Pokemons</h2>
   {% for pokemon in object_list %}
     <li>
       <img src="{{pokemon.sprites.front_default}}" width="30px" height="30px"></img><a href="{{ pokemon.get_absolute_url }}">{{pokemon.idd}} - {{ pokemon.name.capitalize }}</a>

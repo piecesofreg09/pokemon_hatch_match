@@ -168,6 +168,35 @@ def type_scrape():
             main_type.no_damage_to.add(link_type)
     print('Done scraping relationships')
 
+def type_sprite_scrape():
+    print('in type sprites url scraping')
+    base_url = 'https://pokeapi.co/api/v2/'
+    result_types = requests.get(f'{base_url}type').text
+    json_types = json.loads(result_types)
+    print('in type sprite url scraping')
+    for count, type_pair in enumerate(json_types['results']):
+        #print(count)
+        type_url = type_pair['url']
+        result_type = requests.get(type_url).text
+        json_type = json.loads(result_type)
+        idd = int(json_type['id'])
+        print(idd)
+        name = json_type['name']
+        t1 = Type.objects.get(pk=idd)
+        sprite_page_external_url = f'https://bulbapedia.bulbagarden.net/wiki/{name}_(type)'
+        sprite_bs = BeautifulSoup(requests.get(sprite_page_external_url).text, 'html.parser')
+        name_cap = name.capitalize()
+        sprite_temp_bs_res = sprite_bs.select(f"img[alt=\"{name_cap} icon SwSh.png\"]")
+        if len(sprite_temp_bs_res) > 0:
+            sprite_url = sprite_temp_bs_res[0]['src']
+            sprite_url = 'http:' + sprite_url
+        else:
+            sprite_url = 'http://google.com'
+        print(sprite_url)
+        t1.sprite_url = sprite_url
+        t1.save()
+    print('done type sprite url scraping')
+    
 
 if __name__ == '__main__':
     print(__package__)
@@ -188,5 +217,7 @@ if __name__ == '__main__':
     elif sys.argv[1] == "type" or sys.argv[1] == "type":
         Type.objects.all().delete()
         type_scrape()
+    elif sys.argv[1] == "typesp":
+        type_sprite_scrape()
     else:
         scrape()

@@ -47,21 +47,51 @@ class PokemonDetailView(generic.DetailView):
 
 class GenerationListView(generic.ListView):
     model = Generation
-    # your own name for the list as a template variable
+    
     context_object_name = 'all_generation_list'
-    # Get 5 books containing the title war
-    #queryset = Book.objects.filter(title__icontains='war')[:5] 
-    # Specify your own template name/location
-    #template_name = 'books/my_arbitrary_template_name_list.html' 
+    
     paginate_by = 10
 
-class GenerationDetailView(generic.DetailView):
-    model = Generation
+class GenerationDetailView(generic.ListView):
+    
+    paginate_by  = 20
+    template_name = 'pokemon/generation_detail.html'
 
-def GenerationDetail(request, rest):
-    context = {"temp": 11111, 'pk': rest}
-    return render(request, 'generation_detail.html', context=context)
+    def get_queryset(self):
+        return Generation.objects.get(pk=self.kwargs['pk']).pokemon_set.all()
+    
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in the publisher
+        context['generation'] = Generation.objects.get(pk=self.kwargs['pk'])
+        
+        return context
 
-def Test(request, pp, xxx):
-    context = {"var1": pp, "var2": xxx}
-    return render(request, 'generation_detail.html', context=context)
+class TypeListView(generic.ListView):
+    model = Type
+    
+    context_object_name = 'all_type_list'
+    
+    paginate_by = 10
+
+class TypeDetailView(generic.ListView):
+    
+    paginate_by  = 20
+    template_name = 'pokemon/type_detail.html'
+
+    def get_queryset(self):
+        return Type.objects.get(pk=self.kwargs['pk']).pokemon_set.all()
+    
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in the publisher
+        context['type'] = Type.objects.get(pk=self.kwargs['pk'])
+        
+        return context
+
+
+def Test(request, pp, xx):
+    context = {"var1": pp, "var2": xx}
+    return render(request, 'test.html', context=context)
