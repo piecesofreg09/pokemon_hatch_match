@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, api
 from django.urls import include
 
 urlpatterns = [
@@ -14,5 +14,15 @@ urlpatterns += [
     path('types/', views.TypeListView.as_view(), name='types'),
     path('types/<int:pk>', views.TypeDetailView.as_view(), name='type-detail'),
     # a path for testing purposes
+]
+api.SpriteAPIJson
+urlpatterns += [
+    path('api/pokemons', api.PokemonsAPIJson, name='poke-api-pokemons'),
+    path('api/pokemons_s2', api.PokemonsAPIJsonSelect2, name='poke-api-pokemons-select2'),
+    path('api/sprites/<int:pid>/<int:option>', api.SpriteAPIJson, name='poke-api-sprites'),
+]
+
+urlpatterns += [
     path('test/<int:pp>/<int:xx>', views.Test, name='test'),
+    path('test/test', views.TestTest),
 ]

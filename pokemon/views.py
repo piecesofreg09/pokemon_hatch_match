@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 
 from django.views import generic
@@ -95,3 +95,7 @@ class TypeDetailView(generic.ListView):
 def Test(request, pp, xx):
     context = {"var1": pp, "var2": xx}
     return render(request, 'test.html', context=context)
+
+def TestTest(request):
+    data = {1.5: 2}
+    return JsonResponse(data)

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pokemon.apps.PokemonConfig',
+    'hatch.apps.HatchConfig',
 ]
 
 MIDDLEWARE = [

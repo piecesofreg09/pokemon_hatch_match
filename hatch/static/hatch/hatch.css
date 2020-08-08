@@ -1,0 +1,14 @@
+.sprite_box {
+    height: 30vmin;
+    width: 30vmin;
+    background-color: #cccccc;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.unselected_mark {
+    font-size: 70px;
+    opacity: 0.5;
+}

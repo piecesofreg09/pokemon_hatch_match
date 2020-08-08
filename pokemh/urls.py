@@ -27,5 +27,9 @@ urlpatterns += [
 ]
 
 urlpatterns += [
+    path('hatch/', include('hatch.urls')),
+]
+
+urlpatterns += [
     path('', RedirectView.as_view(url='pokemon/', permanent=True)),
 ]

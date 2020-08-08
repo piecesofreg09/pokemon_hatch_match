@@ -1,0 +1,56 @@
+{% extends 'hatch_base_generic.html' %}
+
+{% block import_static %}
+  <script>
+  var sprite_url = '{{ sprite_url|escapejs }}';
+  var pokemons_s2_url = '{{ pokemons_s2_url|escapejs }}';
+  </script>
+  {% load static %}
+  <script src="{% static 'hatch/pokemon_autocomplete.js' %}"></script>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'hatch/hatch.css' %}">
+{% endblock %}
+
+{% block content%}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class='col-sm-6'>
+      <select class="js_pokemon_select1" name="pokemon1" style="width: 75%">
+        
+        <option></option>
+        <!--
+        {% for i in pokemon_list%}
+          <option>{{i.id}} - {{i.text}}</option>
+        {% endfor %}
+        -->
+      </select>
+
+      <div id='sprite_box_1' class='sprite_box'>
+      <i class="fas fa-question unselected_mark fa-10x" id="question_mark_1"></i>
+      <img id="pokemon_img_1" src="" style="opacity: 0"></img>
+      </div>
+
+    </div>
+    <div class='col-sm-6'>
+      <select class="js_pokemon_select2" name="pokemon2" style="width: 75%">
+        
+        <option></option>
+        <!--
+        {% for i in pokemon_list%}
+          <option>{{i.id}} - {{i.text}}</option>
+        {% endfor %}
+        -->
+      </select>
+      
+      <div id='sprite_box_2' class='sprite_box'>
+      <i class="fas fa-question unselected_mark fa-10x" id="question_mark_2"></i>
+      <img id="pokemon_img_2" src="" style="opacity: 0"></img>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock%}
