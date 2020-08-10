@@ -20,6 +20,7 @@ urlpatterns += [
     path('api/pokemons', api.PokemonsAPIJson, name='poke-api-pokemons'),
     path('api/pokemons_s2', api.PokemonsAPIJsonSelect2, name='poke-api-pokemons-select2'),
     path('api/sprites/<int:pid>/<int:option>', api.SpriteAPIJson, name='poke-api-sprites'),
+    path('api/pokemon/<int:pk>', api.PokemonStatAPIJson, name='poke-api-pokemon-ind'),
 ]
 
 urlpatterns += [

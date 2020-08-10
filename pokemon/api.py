@@ -19,6 +19,13 @@ def PokemonsAPIJson(request):
     print(len(data))
     return JsonResponse(data=data, safe=False)
 
+def PokemonStatAPIJson(request, pk):
+    stat = Pokemon.objects.all(pk=pk).stat
+    data = stat._meta.get_fields()
+    print(data)
+    data = {}
+    return JsonResponse(data=data, safe=False)
+
 def PokemonsAPIJsonSelect2(request):
     poke_objects = Pokemon.objects.all()
     data = {"results":[{'id':i.idd, 'text': i.name} for i in poke_objects]}
