@@ -1,0 +1,133 @@
+{% extends 'hatch_base_generic.html' %}
+
+{% block import_static %}
+  <script>
+  var sprite_url = '{{ sprite_url|escapejs }}';
+  var pokemons_s2_url = '{{ pokemons_s2_url|escapejs }}';
+  var stat_url = '{{ stat_url|escapejs}}';
+  </script>
+  {{ pokemon_list|json_script:"pokemon_data" }}
+
+  {% load static %}
+  <script src="{% static 'hatch/pokemon_autocomplete.js' %}"></script>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'hatch/hatch_select.css' %}">
+{% endblock %}
+
+{% block content%}
+
+<div class="container-fluid">
+  <!-- Display selection box-->
+  <div class="row">
+    <div class='col-sm-6 text-center'>
+      <select class="js_pokemon_select1" name="pokemon1" style="width: 75%">
+        <option></option>
+      </select>
+      <div id='sprite_box_1' class='sprite_box'>
+        <i class="fas fa-question unselected_mark fa-10x" id="question_mark_1"></i>
+        <img id="pokemon_img_1" src="" style="opacity: 0"></img>
+      </div>
+
+    </div>
+    <div class='col-sm-6 text-center'>
+      <select class="js_pokemon_select2" name="pokemon2" style="width: 75%">
+        <option></option>
+      </select>
+
+      <div id='sprite_box_2' class='sprite_box row text-center'>
+        <i class="fas fa-question unselected_mark fa-10x" id="question_mark_2"></i>
+        <img id="pokemon_img_2" src="" style="opacity: 0"></img>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- Display Pokemon Details (stats)-->
+  <div class="row">
+    <div class='col-sm-6 text-center'>
+
+      <div id='stat_box_1' class='stat_box'>
+        <table align="center">
+          <tr>
+          <th colspan="3" id='pokemon_1_name'>? 
+          </th>
+          </tr>
+          <tr>
+            <td>HP</td>
+            <td>Attack</td>
+            <td>Defense</td>
+          </tr>
+          <tr>
+            <td id='pokemon_1_hp'>?</td>
+            <td id='pokemon_1_attack'>?</td>
+            <td id='pokemon_1_defense'>?</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+    <div class='col-sm-6  text-center'>
+      
+      <div id='stat_box_2' class='stat_box'>
+        <table align="center">
+          <tr>
+          <td colspan="3" id='pokemon_2_name'>? 
+          </th>
+          </tr>
+          <tr>
+            <td>HP</td>
+            <td>Attack</td>
+            <td>Defense</td>
+          </tr>
+          <tr>
+            <td id='pokemon_2_hp'>?</td>
+            <td id='pokemon_2_attack'>?</td>
+            <td id='pokemon_2_defense'>?</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Handle Submitting -->
+  <div id="form_hatch">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-sm-6">
+          <div class='row'>
+              <input type="hidden" class="form-control-plaintext" name="pokemon_1" value ="{{ form.pokemon_1.value }}" readonly id="pokemon_1">
+          </div>
+        </div>
+        <div class="form-group col-sm-6">
+          <div class='row'>
+            <input type="hidden" class="form-control-plaintext"  name="pokemon_2" value ="{{ form.pokemon_2.value }}" readonly id="pokemon_2">
+          </div>
+        </div>
+      </div>
+      {% if form.errors %}
+      <div class="form-row">
+        {% for field in form %}
+            {% for error in field.errors %} 
+              <div class="form-group col-sm-6">
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+              </div>
+            {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="form-row">
+        <div class="col-sm-12 text-center">
+          <button type="submit" class="btn btn-primary">Confirm Hatch Pair</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

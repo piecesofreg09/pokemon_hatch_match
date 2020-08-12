@@ -20,10 +20,17 @@ def PokemonsAPIJson(request):
     return JsonResponse(data=data, safe=False)
 
 def PokemonStatAPIJson(request, pk):
-    stat = Pokemon.objects.all(pk=pk).stat
-    data = stat._meta.get_fields()
-    print(data)
-    data = {}
+    stat = Pokemon.objects.get(pk=pk).stat
+    fields = stat._meta.get_fields(include_parents=False)
+    field_value_pair = { field.name:field.value_from_object(stat) for field in fields if not field.is_relation}
+    data = {"data": field_value_pair}
+    return JsonResponse(data=data, safe=False)
+
+def PokemonAPIJson(request, pk):
+    pokemon = Pokemon.objects.get(pk=pk)
+    fields = pokemon._meta.get_fields()
+    field_value_pair = { field.name:field.value_from_object(pokemon) for field in fields if not field.is_relation}
+    data = {"data": field_value_pair}
     return JsonResponse(data=data, safe=False)
 
 def PokemonsAPIJsonSelect2(request):

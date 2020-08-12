@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{% extends "base_base_generic.html" %}
 
 {% block content %}
 
@@ -14,7 +14,10 @@
       <p>Please login to see this page.</p>
     {% endif %}
   {% endif %}
-  
+
+  <p>{{next}}</p>
+  <p>gegeage</p>
+
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <table>
@@ -29,6 +32,7 @@
     </table>
     <input type="submit" value="login" />
     <input type="hidden" name="next" value="{{ next }}" />
+    
   </form>
   
   {# Assumes you setup the password_reset view in your URLconf #}

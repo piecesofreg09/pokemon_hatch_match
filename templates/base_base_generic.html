@@ -53,9 +53,33 @@
             <a class="nav-link" href="#">Team Fight </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
+            <a class="nav-link disabled" href="#">More Coming </a>
           </li>
         </ul>
+        {% if user.is_authenticated %}
+        <span class="navbar-item">
+          
+          You are logged in.
+          <!--
+            User: <a class="nav-link" href="#">{{ user.get_username }}</a>
+          -->
+          <!--
+            Please <a class="nav-link" href="#">Login</a>
+          -->
+          
+        </span>
+        <ul class="navbar-nav mr-3">
+          <li class="nav-item">
+            <a class="nav-link" id="logout" href="{% url 'logout' %}?next={{request.path}}">Log Out</a>
+          </li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav mr-3">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}?next={{request.path}}">Log In <span class="sr-only">(Sign In)</span></a>
+          </li>
+        </ul>
+        {% endif %}
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -69,11 +93,6 @@
     <div class="row">
       <div class="col-sm-3">
       {% block sidebar %}
-        <ul class="sidebar-nav">
-          <li><a href="{% url 'pokemons' %}">All Pokemons</a></li>
-          <li><a href="{% url 'generations' %}">Generations</a></li>
-          <li><a href="{% url 'types' %}">Types</a></li>
-        </ul>
       {% endblock %}
       </div>
       <div class="col-sm-9">
@@ -103,7 +122,7 @@
   </div>
   <footer class="footer">
     <div class="container">
-      <span class="text-muted">Written by Winston Lu.</span>
+      <span class="text-muted">Developed by Winston Lu.</span>
       <a href="https://github.com/piecesofreg09" style="color:black;"><i class="fab fa-github"></i></a>
     </div>
   </footer>

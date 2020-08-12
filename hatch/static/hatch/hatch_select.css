@@ -1,0 +1,36 @@
+.sprite_box {
+    height: 30vmin;
+    width: 30vmin;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2vmin;
+    margin-bottom: 2vmin;
+    background-color: #cccccc;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.unselected_mark {
+    font-size: 70px;
+    opacity: 0.5;
+}
+
+table {
+    margin-top: 1vmin;
+    margin-bottom: 1vmin;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30vmin;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-weight: initial;
+}
+th, td {
+    padding: 5px;
+    text-align: center;    
+}
+

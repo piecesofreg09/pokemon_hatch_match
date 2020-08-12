@@ -25,3 +25,8 @@ html, body {
 .test {
     font-size: 300px;
 }
+
+#logout {
+    color: black;
+    font-weight: bold;
+}

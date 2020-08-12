@@ -3,10 +3,13 @@
 {% block import_static %}
   <script>
   var sprite_url = '{{ sprite_url|escapejs }}';
-  var pokemons_s2_url = '{{ pokemons_s2_url|escapejs }}';
+  var stat_url = '{{ stat_url|escapejs}}';
+  var pokemon_1 = '{{ data.pokemon_1|escapejs}}';
+  var pokemon_2 = '{{ data.pokemon_2|escapejs}}';
+  var post_url = '{{ post_url|escapejs }}';
   </script>
   {% load static %}
-  <script src="{% static 'hatch/pokemon_autocomplete.js' %}"></script>
+  <script src="{% static 'hatch/hatch.js' %}"></script>
 
   {% load static %}
   <link rel="stylesheet" href="{% static 'hatch/hatch.css' %}">
@@ -15,42 +18,63 @@
 {% block content%}
 
 <div class="container-fluid">
-  <div class="row">
-    <div class='col-sm-6'>
-      <select class="js_pokemon_select1" name="pokemon1" style="width: 75%">
-        
-        <option></option>
-        <!--
-        {% for i in pokemon_list%}
-          <option>{{i.id}} - {{i.text}}</option>
-        {% endfor %}
-        -->
-      </select>
 
-      <div id='sprite_box_1' class='sprite_box'>
-      <i class="fas fa-question unselected_mark fa-10x" id="question_mark_1"></i>
-      <img id="pokemon_img_1" src="" style="opacity: 0"></img>
+  <div class='row'>
+    <div class='col-md-8'>
+      {% for list_id in '12'|make_list %}
+      <div class="row">
+        <div class='col-sm-6 text-center'>
+          <div id='sprite_box_{{list_id}}' class='sprite_box'>
+            <img id="pokemon_img_{{list_id}}" src="" style="opacity: 1"></img>
+          </div>
+        </div>
+        <div class='col-sm-6 text-center stat_box' >
+            <table align="center" id='table_{{list_id}}' class='stat_table'>
+            </table>
+        </div>
       </div>
-
+      {% endfor %}
     </div>
-    <div class='col-sm-6'>
-      <select class="js_pokemon_select2" name="pokemon2" style="width: 75%">
-        
-        <option></option>
-        <!--
-        {% for i in pokemon_list%}
-          <option>{{i.id}} - {{i.text}}</option>
-        {% endfor %}
-        -->
-      </select>
-      
-      <div id='sprite_box_2' class='sprite_box'>
-      <i class="fas fa-question unselected_mark fa-10x" id="question_mark_2"></i>
-      <img id="pokemon_img_2" src="" style="opacity: 0"></img>
-      </div>
 
+    <div class='col-md-2 text-center' id='outer_result_box'>
+      <div id='result_box' class='text-center'>
+        <table align="center" id='result_table'>
+        <tr>
+        <td>i</td>
+        </tr>
+        <tr>
+        <td>i</td>
+        </tr>
+        <tr>
+        <td>i</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Display Hatch Result -->
+    <div class='col-md-2' id='outer_submit_box'>
+      
+      <form method="post" id='submit_box'>
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="col-sm-12 text-center">
+            <button type="button" class="btn btn-success">Change?</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 text-center">
+            <label>  </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 text-center">
+            <button type="submit" class="btn btn-primary">Confirm Hatch Pair</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
-{% endblock%}
+{% endblock %}

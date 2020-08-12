@@ -1,14 +1,65 @@
 .sprite_box {
-    height: 30vmin;
-    width: 30vmin;
+    height: auto;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2vmin;
+    margin-bottom: 2vmin;
     background-color: #cccccc;
-    
+
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.unselected_mark {
-    font-size: 70px;
-    opacity: 0.5;
+#table_1, #table_2 {
+    border: 0px;
+    margin-top: 3vmin;
+    margin-bottom: 3vmin;
+}
+
+#outer_result_box {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#result_box {
+    display: block;
+    margin: auto;
+    padding: 3px;
+}
+
+#outer_submit_box {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#submit_box {
+    display: block;
+    margin: auto;
+    padding: 3px;
+}
+
+.stat_box {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stat_table {
+    display: block;
+    margin: auto;
+    padding: 3px;
+}
+
+button {
+    width: 100%;
 }

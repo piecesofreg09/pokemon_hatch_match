@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, api
+from . import views, api, profile_view
 from django.urls import include
 
 urlpatterns = [
@@ -15,12 +15,17 @@ urlpatterns += [
     path('types/<int:pk>', views.TypeDetailView.as_view(), name='type-detail'),
     # a path for testing purposes
 ]
-api.SpriteAPIJson
+
 urlpatterns += [
     path('api/pokemons', api.PokemonsAPIJson, name='poke-api-pokemons'),
     path('api/pokemons_s2', api.PokemonsAPIJsonSelect2, name='poke-api-pokemons-select2'),
     path('api/sprites/<int:pid>/<int:option>', api.SpriteAPIJson, name='poke-api-sprites'),
-    path('api/pokemon/<int:pk>', api.PokemonStatAPIJson, name='poke-api-pokemon-ind'),
+    path('api/pokemon/<int:pk>', api.PokemonAPIJson, name='poke-api-pokemon-ind'),
+    path('api/pokemon/stat/<int:pk>', api.PokemonStatAPIJson, name='poke-api-pokemon-ind-stat'),
+]
+
+urlpatterns += [
+    path('accounts/profile/', profile_view.ProfileView, name="profile"),
 ]
 
 urlpatterns += [

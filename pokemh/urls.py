@@ -33,3 +33,10 @@ urlpatterns += [
 urlpatterns += [
     path('', RedirectView.as_view(url='pokemon/', permanent=True)),
 ]
+
+# Accounts related
+urlpatterns += [
+    path('accounts/', include('django.contrib.auth.urls')),
+]
+
+

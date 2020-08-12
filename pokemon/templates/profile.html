@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+  <title>Profile: {% if user.is_authenticated %} {{ user.get_username }} {% else %} Not Logged In {% endif %}</title>
+{% endblock %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    <p>Logged in</p>
+  {% else %}
+    <p>Not Logged in</p>
+  {% endif %}
+{% endblock %}
