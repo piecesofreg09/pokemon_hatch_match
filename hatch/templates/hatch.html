@@ -7,6 +7,8 @@
   var pokemon_1 = '{{ data.pokemon_1|escapejs}}';
   var pokemon_2 = '{{ data.pokemon_2|escapejs}}';
   var post_url = '{{ post_url|escapejs }}';
+  var pokemon_url = '{{ pokemon_url|escapejs }}';
+  var csrf_token = "{{ csrf_token|escapejs }}"
   </script>
   {% load static %}
   <script src="{% static 'hatch/hatch.js' %}"></script>
@@ -20,15 +22,13 @@
 <div class="container-fluid">
 
   <div class='row'>
-    <div class='col-md-8'>
+    <div class='col-md-7'>
       {% for list_id in '12'|make_list %}
       <div class="row">
-        <div class='col-sm-6 text-center'>
-          <div id='sprite_box_{{list_id}}' class='sprite_box'>
-            <img id="pokemon_img_{{list_id}}" src="" style="opacity: 1"></img>
-          </div>
+        <div class='col-sm-5 text-center sprite_box'>
+            <img id="pokemon_img_{{list_id}}" class='sprite_img' src="" style="opacity: 1"></img>
         </div>
-        <div class='col-sm-6 text-center stat_box' >
+        <div class='col-sm-7 text-center stat_box' >
             <table align="center" id='table_{{list_id}}' class='stat_table'>
             </table>
         </div>
@@ -36,18 +36,9 @@
       {% endfor %}
     </div>
 
-    <div class='col-md-2 text-center' id='outer_result_box'>
+    <div class='col-md-3 text-center' id='outer_result_box'>
       <div id='result_box' class='text-center'>
         <table align="center" id='result_table'>
-        <tr>
-        <td>i</td>
-        </tr>
-        <tr>
-        <td>i</td>
-        </tr>
-        <tr>
-        <td>i</td>
-        </tr>
         </table>
       </div>
     </div>
@@ -55,11 +46,11 @@
     <!-- Display Hatch Result -->
     <div class='col-md-2' id='outer_submit_box'>
       
-      <form method="post" id='submit_box'>
+      <form method="post" id='submit_box' action="{{post_url}}">
         {% csrf_token %}
         <div class="form-row">
           <div class="col-sm-12 text-center">
-            <button type="button" class="btn btn-success">Change?</button>
+            <button type="button" class="btn btn-success" id="change">Change?</button>
           </div>
         </div>
         <div class="form-row">
@@ -69,7 +60,11 @@
         </div>
         <div class="form-row">
           <div class="col-sm-12 text-center">
-            <button type="submit" class="btn btn-primary">Confirm Hatch Pair</button>
+            {% if user.is_authenticated %}
+            <button type="submit" class="btn btn-primary" id="confirm">Confirm Hatch Pair</button>
+            {% else %}
+            <button type="submit" class="btn btn-danger" id="confirm">Please Log In First</button>
+            {% endif %}
           </div>
         </div>
       </form>

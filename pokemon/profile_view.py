@@ -11,12 +11,14 @@ from django.views import generic
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 import datetime
 
 from .models import *
 
 # Create your views here.
+@login_required
 def ProfileView(request):
     """View function for home page of site."""
     

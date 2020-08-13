@@ -19,6 +19,12 @@ class SubmitTwoPokemonsForm(forms.Form):
         
         if data < 1:
             raise ValidationError(_("You didn't choose Pokemon 2"))
-
-       
+        
         return data
+    
+    def clean(self):
+        data1 = self.cleaned_data.get('pokemon_1')
+        data2 = self.cleaned_data.get('pokemon_2')
+        
+        if data1 == data2:
+            self.add_error(None, ValidationError(_("You can't have 2 pokemons that are the same")))

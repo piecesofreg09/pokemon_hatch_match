@@ -6,8 +6,32 @@
 
 {% block content %}
   {% if user.is_authenticated %}
-    <p>Logged in</p>
+    <p>Hello Pokelover!</p>
+    <p>Username: {{user}}</p>
+    <p>Nickname: {{user.profile.nickname}}</p>
+
+    {% if user.profile.pokemons_created.count > 0%}
+      <p>You have {{user.profile.pokemons_created.count}} hatched pokemons.</p>
+      <a href="{% url 'hatched-list' %}">Here</a> are the details.
+    {% else %}
+      <p>You don't have any hatched pokemons.</p>
+    {% endif %}
+    
+    <hr>
+    
+    {% if user.profile.pokemons_owned.count > 0%}
+      <p>You have {{user.profile.pokemons_owned.count}} teamed pokemons.</p>
+      <a href="#">Here</a> are the details.
+    {% else %}
+      <p>You don't have any pokemons in teams.</p>
+      <p><a href="#">Create</a> Teams</p>
+    {% endif %}
+    
+    <hr>
+    
+    <p><a href="#">Edit Profile</a></p>
   {% else %}
-    <p>Not Logged in</p>
+    <p>You're not logged in</p>
+    <p><a href="{% url 'login'%}">Log In</a> to see your hatched pokemons </p>
   {% endif %}
 {% endblock %}

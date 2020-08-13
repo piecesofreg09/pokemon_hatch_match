@@ -59,15 +59,14 @@
         {% if user.is_authenticated %}
         <span class="navbar-item">
           
-          You are logged in.
-          <!--
-            User: <a class="nav-link" href="#">{{ user.get_username }}</a>
-          -->
-          <!--
-            Please <a class="nav-link" href="#">Login</a>
-          -->
+          You are logged in. |
           
         </span>
+        <ul class="navbar-nav mr-3">
+          <li class="nav-item">
+            <a class="nav-link" id="profile" href="{% url 'profile' %}">{{ user.get_username }}</a>
+          </li>
+        </ul>
         <ul class="navbar-nav mr-3">
           <li class="nav-item">
             <a class="nav-link" id="logout" href="{% url 'logout' %}?next={{request.path}}">Log Out</a>
@@ -80,10 +79,12 @@
           </li>
         </ul>
         {% endif %}
+        <!--
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
+        -->
       </div>
     </nav>
 

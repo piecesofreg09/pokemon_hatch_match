@@ -6,7 +6,7 @@
     <li><a href="{% url 'hatch-index' %}">Hatch Pokemons</a></li>
     {% if user.is_authenticated %}
     <li>User: {{ user.get_username }}</li>
-    <li><a href="#">My hatched pokemons</a></li>  
+    <li><a href="{% url 'hatched-list' %}">My hatched pokemons</a></li>  
     {% else %}
     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a> To See Your Matched Pokemons</li>   
     {% endif %} 

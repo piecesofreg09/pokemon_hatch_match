@@ -29,6 +29,11 @@ urlpatterns += [
 ]
 
 urlpatterns += [
+    path('accounts/signup', views.signup, name='signup'),
+    path('accounts/update', views.update_profile, name='update'),
+]
+
+urlpatterns += [
     path('test/<int:pp>/<int:xx>', views.Test, name='test'),
     path('test/test', views.TestTest),
 ]

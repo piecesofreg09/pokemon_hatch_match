@@ -1,0 +1,17 @@
+{% extends 'hatch_base_generic.html' %}
+
+{% block content %}
+<h1>All Hatched Pokemons</h1>
+  {% if all_hatched_pokemons %}
+  <ul>
+    {% for pokemon in all_hatched_pokemons %}
+      <li>
+        <a href="{{ pokemon.get_absolute_url }}">{{pokemon.idd}} - {{ pokemon.name.capitalize }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>You haven't hatched any pokemons.</p>
+  {% endif %}  
+
+{% endblock %}

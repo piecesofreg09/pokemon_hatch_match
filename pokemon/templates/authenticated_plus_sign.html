@@ -1,7 +1,10 @@
 {% if user.is_authenticated %}
 <p>user is authenticated</p>
+<!--
 <p><i class="fas fa-egg"></i> Add for Hatching</p>
-<p><i class="far fa-plus-square"></i> Add to Team</p>
+-->
+<a href="#"><i class="far fa-plus-square"></i> Add to Team</a>
+
 {% else %}
-user is not authenticated
+<a href="{% url 'login' %}?next={{request.path}}">Log In</a> to Add to Team
 {% endif %}

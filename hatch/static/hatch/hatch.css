@@ -12,12 +12,19 @@
     align-items: center;
 }
 
+.sprite_img {
+    display: block;
+    margin: auto;
+    padding: 3px;
+}
+
 #table_1, #table_2 {
     border: 0px;
     margin-top: 3vmin;
     margin-bottom: 3vmin;
 }
 
+/* for result */
 #outer_result_box {
     width: 100%;
     text-align: center;
@@ -32,6 +39,7 @@
     padding: 3px;
 }
 
+/* for submit */
 #outer_submit_box {
     width: 100%;
     text-align: center;
@@ -46,6 +54,7 @@
     padding: 3px;
 }
 
+/* for stat box*/
 .stat_box {
     width: 100%;
     text-align: center;

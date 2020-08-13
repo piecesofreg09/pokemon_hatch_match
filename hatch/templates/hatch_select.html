@@ -118,11 +118,24 @@
               </div>
             {% endfor %}
         {% endfor %}
+        
+        {% for error in form.non_field_errors %} 
+          <div class="form-group col-sm-6">
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+          </div>
+        {% endfor %}
+        
       </div>
       {% endif %}
       <div class="form-row">
         <div class="col-sm-12 text-center">
+          {% if user.is_authenticated %}
           <button type="submit" class="btn btn-primary">Confirm Hatch Pair</button>
+          {% else%}
+          <a href="{% url 'login'%}?next={{request.path}}" class="btn btn-primary">Please Log In First</a>
+          {% endif %}
         </div>
       </div>
     </form>

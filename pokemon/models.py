@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from datetime import date
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Generation(models.Model):
     """Model representing the generation number, such as 1, 2, 3, ..."""
@@ -83,14 +85,32 @@ class Sprite(models.Model):
     """
     name = models.CharField(max_length=30,
         help_text='name of the pokemon this set of sprites belongs to')
-    back_default = models.URLField(max_length=300, verbose_name='default back url')
-    front_default = models.URLField(max_length=300, verbose_name='default back url')
-    svg_sprite = models.URLField(max_length=300, verbose_name='default back url')
+    back_default = models.URLField(max_length=300, verbose_name='default back url', blank=True)
+    front_default = models.URLField(max_length=300, verbose_name='default back url', blank=True)
+    svg_sprite = models.URLField(max_length=300, verbose_name='default back url', blank=True)
 
-    big_sprite = models.URLField(max_length=300, verbose_name='default back url')
+    big_sprite = models.URLField(max_length=300, verbose_name='default back url', blank=True)
     
     def __str__(self):
         return 'Sprites object'
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=50, blank=True)
+    pokemons_owned = models.ManyToManyField('Pokemon', 
+        related_name='pokemons_owned', blank=True)
+    pokemons_created = models.ManyToManyField('Pokemon', 
+        related_name='pokemons_created', blank=True)
+    pokemons_team = models.ManyToManyField('Pokemon', 
+        related_name='pokemons_team', blank=True)
+
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
+
 
 # Create your models here.
 class Pokemon(models.Model):
@@ -121,3 +141,6 @@ class Pokemon(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
         return reverse('pokemon-detail', args=[str(self.idd)])
+
+
+
