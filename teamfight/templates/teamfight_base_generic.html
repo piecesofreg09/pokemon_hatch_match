@@ -1,0 +1,16 @@
+{% extends "base_base_generic.html" %}
+
+
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="">Teams</a></li>
+    {% if user.is_authenticated %}
+    <li>User: {{ user.get_username }}</li>
+    <li><a href="">My Teams</a></li>  
+    {% else %}
+    <li><a href="{% url 'login'%}?next={{request.path}}">Login</a> To See Your Teams</li>   
+    {% endif %} 
+    
+  </ul>
+{% endblock %}
+

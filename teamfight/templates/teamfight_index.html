@@ -1,0 +1,19 @@
+{% extends "teamfight_base_generic.html" %}
+{% block import_static %}
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'teamfight/select.css' %}">
+
+{% endblock %}
+{% block content%}
+
+<select id='select_test' size="20">
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+</select>
+
+{% endblock %}

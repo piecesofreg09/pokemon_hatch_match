@@ -31,6 +31,10 @@ urlpatterns += [
 ]
 
 urlpatterns += [
+    path('team/', include('teamfight.urls')),
+]
+
+urlpatterns += [
     path('', RedirectView.as_view(url='pokemon/', permanent=True)),
 ]
 

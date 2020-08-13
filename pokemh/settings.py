@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pokemon.apps.PokemonConfig',
     'hatch.apps.HatchConfig',
+    'teamfight.apps.TeamfightConfig',
 ]
 
 MIDDLEWARE = [
